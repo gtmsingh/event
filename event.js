@@ -88,26 +88,27 @@ var _gtm = function() {
         if (!isValidEventName(name)) {
             throw 'Trigger requires a valid event name';
         }
-        var thisObj = this;
-        thisObj.eventName = name;
-        thisObj.fn = function(event) {
-            if (!isValidEventName(thisObj.eventName)) {
+        var eventName = name;
+        var fn = function(event) {
+            if (!isValidEventName(eventName)) {
                 throw 'Trigger called failed due to invalid event';
             }
-            for (var i = 0; i < EVENT_QUEUE[thisObj.eventName].handlers.length; i++) {
-                var eventObj = EVENT_QUEUE[thisObj.eventName];
-                var fnObj = EVENT_QUEUE[thisObj.eventName].handlers[i];
+            for (var i = 0; i < EVENT_QUEUE[eventName].handlers.length; i++) {
+                var eventObj = EVENT_QUEUE[eventName];
+                var fnObj = EVENT_QUEUE[eventName].handlers[i];
                 fnObj.handler();
-                if (preventDefault(eventObj, fnObj)) {
-                    event.preventDefault();
-                }
-                if (stopPropagation(eventObj, fnObj)) {
-                    event.stopPropagation();
+                if (event) {
+                    if (preventDefault(eventObj, fnObj)) {
+                        event.preventDefault();
+                    }
+                    if (stopPropagation(eventObj, fnObj)) {
+                        event.stopPropagation();
+                    }
                 }
             }
         }
 
-        return this.fn;
+        return fn;
     };
 }
 

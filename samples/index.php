@@ -7,23 +7,36 @@
 	<script src="jquery.js"></script>
 </head>
 <body>
-	<button id="check">Check</button>
+	<div onclick="alert('propagated');">
+		<button id="check">Check</button>
+		<a href="https://www.github.com/gtmsingh" id="link">By handler</a>
+		<a href="https://www.about.me/gtmsingh" id="event-link">By event</a>
+	</div>
 	<script>
 		var x = event.Event('login');
-		x.addHandler('login', function() {
+		x.addHandler(function() {
 			console.log('called login event');
 		})
-		.addHandler('login', function() {
+		.addHandler(function() {
 			console.log('after first call');
 		});
 
 		$('#check').on('click', new event.Trigger('login'));
 		setTimeout(function() {
 			console.log('added more');
-			event.Event('login').addHandler('login', function() {
+			event.Event('login').addHandler(function() {
 				console.log('there again');
 			});
 		}, 5000);
+
+		event.Event('link').addHandler(function() {
+			console.log('tried stopping redirect');
+		}, {
+			stopPropagation: true,
+			preventDefault: true
+		});
+
+		$('#link').on('click', new event.Trigger('link'));
 	</script>
 </body>
 </html>

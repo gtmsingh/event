@@ -1,13 +1,11 @@
 var _gtm = function() {
     var EVENT_QUEUE = {};
-    var parent = this;
 
     function getDefaultOptions() {
-        var _defaultOption = {
-            allowPropagation: true,
+        return {
+            stopPropagation: true,
             preventDefault: true
         }
-        return JSON.parse(JSON.stringify(_defaultOption));
     };
 
     function preventDefault(e, f) {
@@ -19,16 +17,16 @@ var _gtm = function() {
     };
 
     function stopPropagation(e, f) {
-        if (f.options.allowPropagation !== undefined) {
-            return f.options.allowPropagation;
+        if (f.options.stopPropagation !== undefined) {
+            return f.options.stopPropagation;
         } else {
-            return e.options.allowPropagation;
+            return e.options.stopPropagation;
         }
     };
 
     function getNewHandler(fn, options) {
         if (typeof fn !== typeof(function() {})) {
-            throw new Exception('Handler function is invalid');
+            throw 'Handler function is invalid';
         }
         return {
             handler: fn,
@@ -45,6 +43,29 @@ var _gtm = function() {
         return true;
     };
 
+    function _event(name, options) {
+        var parent = this;
+        this.options = options;
+        this.handlers = [];
+        this.name = name;
+        this.addHandler = function addHandler(fn, options) {
+            if (!isValidEventName(parent.name)) {
+                throw 'Handler couldn\'t be added, Invalid event';
+            }
+            if (typeof fn !== typeof(function() {})) {
+                throw 'Handler is not a function';
+            }
+            var _options = {};
+            if (options) {
+                for (key in options) {
+                    _options[key] = options[key];
+                }
+            }
+            EVENT_QUEUE[name].handlers.push(getNewHandler(fn, _options));
+            return parent;
+        }
+    }
+
     this.Event = function(name, options) {
         var _options = getDefaultOptions();
         if (options) {
@@ -57,23 +78,21 @@ var _gtm = function() {
                 EVENT_QUEUE[name].options[key] = _options[key];
             }
         } else {
-            var _sample = {
-                options: _options,
-                handlers: []
-            };
+            var _sample = new _event(name, _options);
             EVENT_QUEUE[name] = _sample;
         }
-        return parent;
+        return EVENT_QUEUE[name];
     };
+
     this.Trigger = function(name) {
         if (!isValidEventName(name)) {
-            throw new Exception('Trigger requires a valid event name');
+            throw 'Trigger requires a valid event name';
         }
         var thisObj = this;
         thisObj.eventName = name;
         thisObj.fn = function(event) {
             if (!isValidEventName(thisObj.eventName)) {
-                throw new Exception('Trigger called failed due to invalid event');
+                throw 'Trigger called failed due to invalid event';
             }
             for (var i = 0; i < EVENT_QUEUE[thisObj.eventName].handlers.length; i++) {
                 var eventObj = EVENT_QUEUE[thisObj.eventName];
@@ -89,22 +108,6 @@ var _gtm = function() {
         }
 
         return this.fn;
-    };
-    this.addHandler = function(name, fn, options) {
-        if (!isValidEventName(name)) {
-            throw new Exception('Handler couldn\'t be added, Invalid event');
-        }
-        if (typeof fn !== typeof(function() {})) {
-            throw new Exception('Handler is not a function');
-        }
-        var _options = {};
-        if (options) {
-            for (key in options) {
-                _options[key] = options[key];
-            }
-        }
-        EVENT_QUEUE[name].handlers.push(getNewHandler(fn, _options));
-        return parent;
     };
 }
 

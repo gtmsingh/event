@@ -21,7 +21,7 @@
 			console.log('after first call');
 		});
 
-		$('#check').on('click', new event.Trigger('login'));
+		$('#check').on('click', event.getTrigger('login'));
 		setTimeout(function() {
 			console.log('added more');
 			event.Event('login').addHandler(function() {
@@ -36,7 +36,7 @@
 			preventDefault: true
 		});
 
-		$('#link').on('click', new event.Trigger('link'));
+		$('#link').on('click', event.getTrigger('link'));
 	</script>
 </body>
 </html>

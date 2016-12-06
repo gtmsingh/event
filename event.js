@@ -84,7 +84,7 @@ var _gtm = function() {
         return EVENT_QUEUE[name];
     };
 
-    this.Trigger = function(name) {
+    this.getTrigger = function(name) {
         if (!isValidEventName(name)) {
             throw 'Trigger requires a valid event name';
         }

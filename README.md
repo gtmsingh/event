@@ -12,7 +12,6 @@ It is a simple event manager module that can be used to decrease the burden on D
 
 
 ## TODO
-* Add manual event trigger functionality.
 * Add deregistration functionality for handlers.
 * Add alert for register and deregister of handlers for any event.
 * Research on pub-sub model for this, whether it would be better or worse.

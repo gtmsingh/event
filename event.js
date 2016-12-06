@@ -1,6 +1,7 @@
 var _gtm = function() {
     var EVENT_QUEUE = {};
     var TRIGGERS = {};
+    var _parent = this;
 
     function getDefaultOptions() {
         return {
@@ -67,7 +68,7 @@ var _gtm = function() {
         }
     }
 
-    this.Event = function(name, options) {
+    this.Event = function Event(name, options) {
         var _options = getDefaultOptions();
         if (options) {
             for (key in options) {
@@ -85,9 +86,9 @@ var _gtm = function() {
         return EVENT_QUEUE[name];
     };
 
-    this.getTrigger = function(name) {
+    this.getTrigger = function getTrigger(name) {
         if (!isValidEventName(name)) {
-            throw 'Trigger requires a valid event name';
+            throw 'Invalid event for getting trigger';
         }
         if (!(name in TRIGGERS)) {
             TRIGGERS[name] = (function(name) {
@@ -114,6 +115,13 @@ var _gtm = function() {
         }
         return TRIGGERS[name];
     };
+
+    this.trigger = function trigger(name, event) {
+        if (!isValidEventName(name)) {
+        	throw 'Invalid event to trigger';
+        }
+        _parent.getTrigger(name)(event);
+    }
 }
 
 var event = new _gtm();

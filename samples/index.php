@@ -37,6 +37,9 @@
 		});
 
 		$('#link').on('click', event.getTrigger('link'));
+		setTimeout(function() {
+			event.trigger('link');
+		}, 1000);
 	</script>
 </body>
 </html>

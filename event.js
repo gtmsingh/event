@@ -1,5 +1,6 @@
 var _gtm = function() {
     var EVENT_QUEUE = {};
+    var TRIGGERS = {};
 
     function getDefaultOptions() {
         return {
@@ -88,27 +89,30 @@ var _gtm = function() {
         if (!isValidEventName(name)) {
             throw 'Trigger requires a valid event name';
         }
-        var eventName = name;
-        var fn = function(event) {
-            if (!isValidEventName(eventName)) {
-                throw 'Trigger called failed due to invalid event';
-            }
-            for (var i = 0; i < EVENT_QUEUE[eventName].handlers.length; i++) {
-                var eventObj = EVENT_QUEUE[eventName];
-                var fnObj = EVENT_QUEUE[eventName].handlers[i];
-                fnObj.handler();
-                if (event) {
-                    if (preventDefault(eventObj, fnObj)) {
-                        event.preventDefault();
+        if (!(name in TRIGGERS)) {
+            TRIGGERS[name] = (function(name) {
+                var eventName = name;
+                return function(event) {
+                    if (!isValidEventName(eventName)) {
+                        throw 'Trigger called failed due to invalid event';
                     }
-                    if (stopPropagation(eventObj, fnObj)) {
-                        event.stopPropagation();
+                    for (var i = 0; i < EVENT_QUEUE[eventName].handlers.length; i++) {
+                        var eventObj = EVENT_QUEUE[eventName];
+                        var fnObj = EVENT_QUEUE[eventName].handlers[i];
+                        fnObj.handler();
+                        if (event) {
+                            if (preventDefault(eventObj, fnObj)) {
+                                event.preventDefault();
+                            }
+                            if (stopPropagation(eventObj, fnObj)) {
+                                event.stopPropagation();
+                            }
+                        }
                     }
                 }
-            }
+            })(name);
         }
-
-        return fn;
+        return TRIGGERS[name];
     };
 }
 

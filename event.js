@@ -5,8 +5,8 @@ var _gtm = function() {
 
     function getDefaultOptions() {
         return {
-            stopPropagation: true,
-            preventDefault: true
+            stopPropagation: false,
+            preventDefault: false
         }
     };
 

@@ -30,6 +30,10 @@
 		}, 5000);
 
 		event.Event('link').addHandler(function() {
+			console.log('1st link event');
+		});
+
+		event.Event('link').addHandler(function() {
 			console.log('tried stopping redirect');
 		}, {
 			stopPropagation: true,
@@ -38,7 +42,7 @@
 
 		$('#link').on('click', event.getTrigger('link'));
 		setTimeout(function() {
-			event.trigger('link');
+			event.Event('link').trigger();
 		}, 1000);
 	</script>
 </body>

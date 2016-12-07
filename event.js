@@ -65,6 +65,12 @@ var _gtm = function() {
             }
             EVENT_QUEUE[name].handlers.push(getNewHandler(fn, _options));
             return parent;
+        };
+        this.trigger = function trigger(event) {
+            if (!isValidEventName(parent.name)) {
+                throw 'Invalid event to trigger';
+            }
+            _parent.getTrigger(parent.name)(event);
         }
     }
 
@@ -100,7 +106,7 @@ var _gtm = function() {
                     for (var i = 0; i < EVENT_QUEUE[eventName].handlers.length; i++) {
                         var eventObj = EVENT_QUEUE[eventName];
                         var fnObj = EVENT_QUEUE[eventName].handlers[i];
-                        fnObj.handler();
+                        fnObj.handler(event);
                         if (event) {
                             if (preventDefault(eventObj, fnObj)) {
                                 event.preventDefault();
@@ -115,13 +121,6 @@ var _gtm = function() {
         }
         return TRIGGERS[name];
     };
-
-    this.trigger = function trigger(name, event) {
-        if (!isValidEventName(name)) {
-        	throw 'Invalid event to trigger';
-        }
-        _parent.getTrigger(name)(event);
-    }
 }
 
 var event = new _gtm();

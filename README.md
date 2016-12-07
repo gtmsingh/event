@@ -26,5 +26,6 @@ These options, as you guess are used to stop propagation of event and preventing
 ### TODO
 * Add deregistration functionality for handlers.
 * Add alert for register and deregister of handlers for any event.
+* Add callback/promise support to add synchronization of async handlers.
 * Research on pub-sub model for this, whether it would be better or worse.
 * Add this in bower or similar package manager.

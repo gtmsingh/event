@@ -11,7 +11,7 @@ It is a simple event manager module that can be used to decrease the burden on D
     - `trigger([event])` : It triggers a event if its still present. It accepts optional javascript event that can be used inside the handler.
 * `getTrigger(name)` : It returns a handler which would trigger all the handlers added using `Event.addHandler` function. This is attached with user action that is intended for all the handlers throughout the application.
 
-
+For usage example, you can check [this](https://codebeads.wordpress.com/2016/12/07/javascript-going-back-to-events/)
 #### Note:
 * `options` being used have the following default values and are optional (unless specifically mentioned).
 ```

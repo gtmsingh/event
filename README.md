@@ -8,8 +8,8 @@ It is a simple event manager module that can be used to decrease the burden on D
 
 * `Event(name, options)` : It creates a new event by the name of `name` if it doesn't exists otherwise would update the options of the already present event. Returns object which supports the following functionalities: 
     - `addHandler(fn, options)` : Enqueue a handler for the event which is obtained from the `Event` function. `fn` is the handler function and `options` overrides the `options` used for the `Event` when the same is called. This can be optionally chained with multiple `addHandlers`.
+    - `trigger(name)` : It triggers a event if its still present.
 * `getTrigger(name)` : It returns a handler which would trigger all the handlers added using `Event.addHandler` function. This is attached with user action that is intended for all the handlers throughout the application.
-* `trigger(name)` : It triggers a event by name `name` if present.
 
 
 #### Note:

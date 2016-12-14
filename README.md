@@ -36,4 +36,4 @@ These options, as you guess are used to stop propagation of event and preventing
 
 ### Changelog
 From version 1.0
-* Added [removeHandler]() and [getLastHandlerName]() function.
+* Added `removeHandler` and `getLastHandlerName` function.

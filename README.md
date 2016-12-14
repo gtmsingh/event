@@ -34,6 +34,7 @@ These options, as you guess are used to stop propagation of event and preventing
 - [ ] Research on pub-sub model for this, whether it would be better or worse.
 - [ ] Add this in bower or similar package manager.
 
+
 ### Changelog
 From version 1.0
 * Added `removeHandler` and `getLastHandlerName` function.

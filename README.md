@@ -12,7 +12,7 @@ Some functionality might be present in some versio and might not be in another. 
     - `addHandler(fn, [options])` : Enqueue a handler for the event which is obtained from the `Event` function. `fn` is the handler function and `options` overrides the `options` used for the `Event` when the same is called. This can be optionally chained with multiple `addHandlers`.
     - `trigger([event])` : It triggers a event if its still present. It accepts optional javascript event that can be used inside the handler.
     - `removeHandler(name)` : It removes the handler attached to the event by its name. `name` of named functions is its name, but for anonymous function it is an alphanumeric random string. For anonymous handler if you might need to remove it later, do call `getLastHandlerName` function as soon as you call `addHandler` and store the name somewhere.
-    - `getLastHandlerName` : Get the name of last handler added to a particular event.
+    - `getLastHandlerName()` : Get the name of last handler added to a the event.
 * `getTrigger(name)` : It returns a handler which would trigger all the handlers added using `Event.addHandler` function. This is attached with user action that is intended for all the handlers throughout the application.
 
 For usage example, you can check [this](https://codebeads.wordpress.com/2016/12/07/javascript-going-back-to-events/)

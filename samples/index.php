@@ -24,12 +24,13 @@
 		$('#check').on('click', event.getTrigger('login'));
 		setTimeout(function() {
 			console.log('added more');
+			event.Event('login').removeHandler(event.Event('login').getLastHandlerName());
 			event.Event('login').addHandler(function() {
 				console.log('there again');
 			});
 		}, 5000);
 
-		event.Event('link').addHandler(function() {
+		event.Event('link').addHandler(function oneLink() {
 			console.log('1st link event');
 		});
 
@@ -42,8 +43,10 @@
 
 		$('#link').on('click', event.getTrigger('link'));
 		setTimeout(function() {
+			console.log('Link manually triggering');
+			event.Event('link').removeHandler('oneLink');
 			event.Event('link').trigger();
-		}, 1000);
+		}, 5000);
 	</script>
 </body>
 </html>

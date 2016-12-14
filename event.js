@@ -36,6 +36,23 @@ var _gtm = function() {
         };
     };
 
+    function getHandlerKey(fn, handlers) {
+        if (typeof fn === typeof(function() {})) {
+            if (fn.name) {
+                return fn.name;
+            } else {
+                for (var i = 0; i < 3; i++) {
+                    var name = Math.random().toString(36).slice(2);
+                    if (!(name in handlers)) {
+                        return name;
+                    }
+                }
+            }
+        } else {
+            throw "Could get key for non-function type";
+        }
+    }
+
     function isValidEventName(name) {
         if (typeof name !== typeof '') {
             return false;
@@ -49,6 +66,7 @@ var _gtm = function() {
         var parent = this;
         this.options = options;
         this.handlers = [];
+        this.handlersMap = {};
         this.name = name;
         this.addHandler = function addHandler(fn, options) {
             if (!isValidEventName(parent.name)) {
@@ -63,8 +81,27 @@ var _gtm = function() {
                     _options[key] = options[key];
                 }
             }
-            EVENT_QUEUE[name].handlers.push(getNewHandler(fn, _options));
+            var fnKey = getHandlerKey(fn, parent.handlersMap);
+            if (fnKey in parent.handlersMap) {
+                throw 'Handler with this name already exists for "' + parent.name + '" event';
+            }
+            parent.handlersMap[fnKey] = getNewHandler(fn, _options);
+            parent.handlers.push(fnKey);
             return parent;
+        };
+        this.removeHandler = function removeHandler(name) {
+            if (!(name in parent.handlersMap)) {
+                throw "Cannot remove unregistered handler";
+            }
+            delete parent.handlersMap[name];
+            parent.handlers.splice(parent.handlers.indexOf(name), 1);
+        };
+        this.getLastHandlerName = function() {
+            if (parent.handlers.length > 0) {
+                return parent.handlers[parent.handlers.length - 1];
+            } else {
+                return null;
+            }
         };
         this.trigger = function trigger(event) {
             if (!isValidEventName(parent.name)) {
@@ -80,15 +117,17 @@ var _gtm = function() {
             for (key in options) {
                 _options[key] = options[key];
             }
-        }
-        if (name in EVENT_QUEUE) {
-            for (key in _options) {
-                EVENT_QUEUE[name].options[key] = _options[key];
+            if (name in EVENT_QUEUE) {
+                for (key in _options) {
+                    EVENT_QUEUE[name].options[key] = _options[key];
+                }
             }
-        } else {
+        }
+        if (!(name in EVENT_QUEUE)) {
             var _sample = new _event(name, _options);
             EVENT_QUEUE[name] = _sample;
         }
+
         return EVENT_QUEUE[name];
     };
 
@@ -105,7 +144,8 @@ var _gtm = function() {
                     }
                     for (var i = 0; i < EVENT_QUEUE[eventName].handlers.length; i++) {
                         var eventObj = EVENT_QUEUE[eventName];
-                        var fnObj = EVENT_QUEUE[eventName].handlers[i];
+                        var fnKey = EVENT_QUEUE[eventName].handlers[i];
+                        var fnObj = EVENT_QUEUE[eventName].handlersMap[fnKey];
                         fnObj.handler(event);
                         if (event) {
                             if (preventDefault(eventObj, fnObj)) {
